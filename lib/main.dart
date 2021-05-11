@@ -1,6 +1,5 @@
-import 'package:autolibdz/counter_bloc.dart';
-import 'package:autolibdz/counter_events.dart';
 import 'package:flutter/material.dart';
+import 'car.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,6 +15,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: 'autolibdz'),
+       routes: <String,WidgetBuilder>{
+          "/car":(BuildContext context) => Car(),
+
+       }
     );
   }
 }
@@ -181,7 +184,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: double.infinity,
                     child: RaisedButton(
                       elevation:5,
-                      onPressed: () {},
+                      onPressed: () {
+                       Navigator.of(context).pushNamed("/car");
+                      },
                       padding:EdgeInsets.all(15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
