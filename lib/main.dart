@@ -1,21 +1,23 @@
+import 'package:autolibdz/HomeScreen.dart';
 import 'package:autolibdz/counter_bloc.dart';
 import 'package:autolibdz/counter_events.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
+
 class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+     return MaterialApp(
         debugShowCheckedModeBanner: false,
       title: 'AutolibDz',
       theme: ThemeData(
       
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'autolibdz'),
+      home: HomeScreen() 
     );
   }
 }
