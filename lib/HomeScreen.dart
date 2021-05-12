@@ -7,6 +7,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _bottomNavigationIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     List<Vehicule> listVehicules = <Vehicule>[];
@@ -17,48 +19,52 @@ class _HomeScreenState extends State<HomeScreen> {
     listVehicules.add(v1);
     listVehicules.add(v2);
     listVehicules.add(v3);
-    int _currentIndex = 1;
-
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Color(0xff252834),
+        currentIndex: _bottomNavigationIndex,
+        selectedItemColor:Colors.white , 
+        unselectedItemColor: Colors.white,
+        showUnselectedLabels: true,
+
         iconSize: 25,
         items: [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.theaters,
-              color: (_currentIndex == 0) ? Color(0xFFFD0A4C) : Colors.grey,
+              Icons.home,
+        
             ),
-            label: "",
+            label: "Acceuil",
           ),
           BottomNavigationBarItem(
-            label: "",
             icon: Icon(
-              Icons.whatshot,
-              color: (_currentIndex == 1) ? Color(0xFFFD0A4C) : Colors.grey,
+              Icons.time_to_leave_rounded,
+
+            ),
+            label: "Véhicules",
+          ),
+          BottomNavigationBarItem(
+            label: "Pannes",
+            icon: Icon(
+              Icons.build,
+
             ),
           ),
           BottomNavigationBarItem(
-            label: "",
+            label: "Plan",
             icon: Icon(
-              Icons.bookmark,
-              color: (_currentIndex == 2) ? Color(0xFFFD0A4C) : Colors.grey,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icon(
-              Icons.person,
-              color: (_currentIndex == 3) ? Color(0xFFFD0A4C) : Colors.grey,
+              Icons.calendar_today_outlined,
+
             ),
           )
         ],
         onTap: (index) {
           print(index);
           setState(() {
-            _currentIndex = index;
+            _bottomNavigationIndex = index;
           });
         },
       ),
@@ -67,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
+            children: [
               SizedBox(
                 height: 0.02 * long,
               ),
