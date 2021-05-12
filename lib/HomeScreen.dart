@@ -1,5 +1,7 @@
 import 'package:autolibdz/Classes/Vehicule.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'dart:convert' as convert;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -8,17 +10,41 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _bottomNavigationIndex = 0;
+  List<Vehicule> listVehicules = <Vehicule>[];
+
+  getData() async {
+    final url = Uri.parse('https://autolib-dz.herokuapp.com/api/vehicules');
+    Response response = await get(url);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body) as List<dynamic>;
+      //print("length${jsonResponse.length}");
+      for (int i = 0; i < jsonResponse.length; i++) {
+         print(jsonResponse[i]["modele"]);
+        Vehicule v = new Vehicule(jsonResponse[i]["modele"],
+            jsonResponse[i]["marque"], 'img/car.png');
+         listVehicules.add(v);
+      }
+      setState(() {
+        
+      });
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  void initState()  {
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Vehicule> listVehicules = <Vehicule>[];
-
-    Vehicule v1 = new Vehicule("Buggati", "Chiron", 'img/car.png');
+    /*  Vehicule v1 = new Vehicule("Buggati", "Chiron", 'img/car.png');
     Vehicule v2 = new Vehicule("Mercedes", "AMG G-63", 'img/car2.png');
     Vehicule v3 = new Vehicule("Mercedes", "AMG G-88", 'img/car.png');
     listVehicules.add(v1);
     listVehicules.add(v2);
-    listVehicules.add(v3);
+    listVehicules.add(v3);*/
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -26,23 +52,20 @@ class _HomeScreenState extends State<HomeScreen> {
         type: BottomNavigationBarType.fixed,
         backgroundColor: Color(0xff252834),
         currentIndex: _bottomNavigationIndex,
-        selectedItemColor:Colors.white , 
+        selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white,
         showUnselectedLabels: true,
-
         iconSize: 25,
         items: [
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
-        
             ),
             label: "Acceuil",
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.time_to_leave_rounded,
-
             ),
             label: "Véhicules",
           ),
@@ -50,14 +73,12 @@ class _HomeScreenState extends State<HomeScreen> {
             label: "Pannes",
             icon: Icon(
               Icons.build,
-
             ),
           ),
           BottomNavigationBarItem(
             label: "Plan",
             icon: Icon(
               Icons.calendar_today_outlined,
-
             ),
           )
         ],
@@ -169,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      'Buggati',
+                                      listVehicules[index].modele,
                                       style: TextStyle(
                                         fontFamily: 'Nunito',
                                         fontSize: 16,
@@ -177,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Text(
-                                      'Chiron',
+                                      listVehicules[index].marque,
                                       style: TextStyle(
                                         fontFamily: 'Nunito',
                                         fontSize: 16,
