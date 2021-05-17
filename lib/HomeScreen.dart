@@ -1,5 +1,6 @@
 import 'package:autolibdz/Classes/Vehicule.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart';
 import 'dart:convert' as convert;
 
@@ -11,40 +12,48 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _bottomNavigationIndex = 0;
   List<Vehicule> listVehicules = <Vehicule>[];
+  int connectedUserId;
 
   getData() async {
-    final url = Uri.parse('https://autolib-dz.herokuapp.com/api/vehicules');
+    final url =
+        Uri.parse('https://autolib-dz.herokuapp.com/api/vehicules/agents/$connectedUserId');
     Response response = await get(url);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body) as List<dynamic>;
       //print("length${jsonResponse.length}");
       for (int i = 0; i < jsonResponse.length; i++) {
-         print(jsonResponse[i]["modele"]);
+        print(jsonResponse[i]["modele"]);
         Vehicule v = new Vehicule(jsonResponse[i]["modele"],
             jsonResponse[i]["marque"], 'img/car.png');
-         listVehicules.add(v);
+        listVehicules.add(v);
       }
-      setState(() {
-        
-      });
+    setState(() {
+      
+    });
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
 
-  void initState()  {
-    getData();
+  getConnectedUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    connectedUserId = prefs.getInt('connectedUserId');
+  }
+
+
+  Future<void> initData() async {
+    await getConnectedUserId();
+    print("The connected user id is this one$connectedUserId");
+    await getData();
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    /*  Vehicule v1 = new Vehicule("Buggati", "Chiron", 'img/car.png');
-    Vehicule v2 = new Vehicule("Mercedes", "AMG G-63", 'img/car2.png');
-    Vehicule v3 = new Vehicule("Mercedes", "AMG G-88", 'img/car.png');
-    listVehicules.add(v1);
-    listVehicules.add(v2);
-    listVehicules.add(v3);*/
+    if ((listVehicules.length==0) || (connectedUserId==null) ) {
+    initData();
+    }
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
     return Scaffold(
