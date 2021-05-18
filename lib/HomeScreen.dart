@@ -1,9 +1,9 @@
-import 'package:autolibdz/Classes/Vehicule.dart';
+import 'package:autolibdz/Controllers/VehiculesController.dart';
+import 'package:autolibdz/Globals/Globals.dart';
+import 'package:autolibdz/Model/Vehicule.dart';
 import 'package:autolibdz/LoginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart';
-import 'dart:convert' as convert;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -13,52 +13,29 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _bottomNavigationIndex = 0;
   List<Vehicule> listVehicules = <Vehicule>[];
-  int connectedUserId;
-
-  getData() async {
-    final url = Uri.parse(
-        'https://autolib-dz.herokuapp.com/api/vehicules/agents/$connectedUserId');
-    Response response = await get(url);
-
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body) as List<dynamic>;
-      //print("length${jsonResponse.length}");
-      for (int i = 0; i < jsonResponse.length; i++) {
-        print(jsonResponse[i]["modele"]);
-        Vehicule v = new Vehicule(
-            jsonResponse[i]["modele"],
-            jsonResponse[i]["marque"],
-            'img/car.png',
-            jsonResponse[i]["numImmatriculation"],
-            jsonResponse[i]["etat"]);
-        listVehicules.add(v);
-      }
-      setState(() {});
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-    }
-  }
-
-  getConnectedUserId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    connectedUserId = prefs.getInt('connectedUserId');
-  }
 
   Future<void> initData() async {
-    await getConnectedUserId();
-    print("The connected user id is this one$connectedUserId");
-    await getData();
+    if (GlobalVarsSingleton().listVehicule==null) {
+    VehiculesController vehiculesController = new VehiculesController();
+    await vehiculesController.getListVehicules();
+    listVehicules = GlobalVarsSingleton().listVehicule ;
+    setState(() {});
+    }
+    else {
+      listVehicules = GlobalVarsSingleton().listVehicule ;
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
-    if ((listVehicules.length == 0) || (connectedUserId == null)) {
+  Widget build(BuildContext context) { // ana agent must have at least one vehicule or its gonna cause a problem
+    if (listVehicules.length == 0) {
       initData();
     }
+   
+    
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
-    print ("longeur =$long");
-    print("largeur =$larg");
+
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -133,7 +110,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         prefs.remove('connectedUserId');
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
                         );
                       },
                       child: Icon(Icons.logout),

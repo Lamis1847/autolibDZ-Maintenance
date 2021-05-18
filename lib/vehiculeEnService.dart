@@ -1,8 +1,6 @@
-import 'package:autolibdz/Classes/Vehicule.dart';
+import 'package:autolibdz/Globals/Globals.dart';
+import 'package:autolibdz/Model/Vehicule.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart';
-import 'dart:convert' as convert;
 import 'package:anim_search_bar/anim_search_bar.dart';
 
 class VehiculeEnService extends StatefulWidget {
@@ -12,49 +10,19 @@ class VehiculeEnService extends StatefulWidget {
 
 class _VehiculeEnServiceState extends State<VehiculeEnService> {
   List<Vehicule> listVehicules = <Vehicule>[];
-  int connectedUserId;
 
-  getData() async {
-    final url =
-        Uri.parse('https://autolib-dz.herokuapp.com/api/vehicules/en-service');
-    Response response = await get(url);
-
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body) as List<dynamic>;
-      //print("length${jsonResponse.length}");
-      for (int i = 0; i < jsonResponse.length; i++) {
-        print(jsonResponse[i]["modele"]);
-        Vehicule v = new Vehicule(
-            jsonResponse[i]["modele"],
-            jsonResponse[i]["marque"],
-            'img/car.png',
-            jsonResponse[i]["numImmatriculation"],
-            jsonResponse[i]["etat"]);
-        listVehicules.add(v);
+   initData()  {
+    for (int i=0;i<GlobalVarsSingleton().listVehicule.length;i++) {
+      if (GlobalVarsSingleton().listVehicule[i].etat=="en service") {
+        listVehicules.add(GlobalVarsSingleton().listVehicule[i]) ;
       }
-      setState(() {});
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
     }
-  }
-
-  getConnectedUserId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    connectedUserId = prefs.getInt('connectedUserId');
-  }
-
-  Future<void> initData() async {
-    await getConnectedUserId();
-    print("The connected user id is this one$connectedUserId");
-    await getData();
   }
 
   TextEditingController textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    if ((listVehicules.length == 0) || (connectedUserId == null)) {
-      initData();
-    }
+    initData();
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
     return SafeArea(

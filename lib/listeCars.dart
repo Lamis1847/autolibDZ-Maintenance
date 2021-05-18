@@ -1,9 +1,9 @@
-import 'package:autolibdz/Classes/Vehicule.dart';
+import 'package:autolibdz/Model/Vehicule.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart';
-import 'dart:convert' as convert;
+
 import 'package:anim_search_bar/anim_search_bar.dart';
+
+import 'Globals/Globals.dart';
 
 class ListeCars extends StatefulWidget {
   @override
@@ -12,45 +12,16 @@ class ListeCars extends StatefulWidget {
 
 class _ListeCarsState extends State<ListeCars> {
   List<Vehicule> listVehicules = <Vehicule>[];
-  int connectedUserId;
 
-  getData() async {
-    final url = Uri.parse(
-        'https://autolib-dz.herokuapp.com/api/vehicules/agents/$connectedUserId');
-    Response response = await get(url);
-
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body) as List<dynamic>;
-      //print("length${jsonResponse.length}");
-      for (int i = 0; i < jsonResponse.length; i++) {
-        print(jsonResponse[i]["modele"]);
-        Vehicule v = new Vehicule(jsonResponse[i]["modele"],
-            jsonResponse[i]["marque"], 'img/car.png',jsonResponse[i]["numImmatriculation"],jsonResponse[i]["etat"]);
-        listVehicules.add(v);
-      }
-      setState(() {});
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-    }
-  }
-
-  getConnectedUserId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    connectedUserId = prefs.getInt('connectedUserId');
-  }
 
   Future<void> initData() async {
-    await getConnectedUserId();
-    print("The connected user id is this one$connectedUserId");
-    await getData();
+    listVehicules = GlobalVarsSingleton().listVehicule ;
   }
 
   TextEditingController textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    if ((listVehicules.length == 0) || (connectedUserId == null)) {
-      initData();
-    }
+    initData();
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
     return SafeArea(
