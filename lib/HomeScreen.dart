@@ -1,4 +1,5 @@
 import 'package:autolibdz/Classes/Vehicule.dart';
+import 'package:autolibdz/LoginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart';
@@ -15,8 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int connectedUserId;
 
   getData() async {
-    final url =
-        Uri.parse('https://autolib-dz.herokuapp.com/api/vehicules/agents/$connectedUserId');
+    final url = Uri.parse(
+        'https://autolib-dz.herokuapp.com/api/vehicules/agents/$connectedUserId');
     Response response = await get(url);
 
     if (response.statusCode == 200) {
@@ -24,13 +25,15 @@ class _HomeScreenState extends State<HomeScreen> {
       //print("length${jsonResponse.length}");
       for (int i = 0; i < jsonResponse.length; i++) {
         print(jsonResponse[i]["modele"]);
-        Vehicule v = new Vehicule(jsonResponse[i]["modele"],
-            jsonResponse[i]["marque"], 'img/car.png');
+        Vehicule v = new Vehicule(
+            jsonResponse[i]["modele"],
+            jsonResponse[i]["marque"],
+            'img/car.png',
+            jsonResponse[i]["numImmatriculation"],
+            jsonResponse[i]["etat"]);
         listVehicules.add(v);
       }
-    setState(() {
-      
-    });
+      setState(() {});
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
@@ -41,21 +44,21 @@ class _HomeScreenState extends State<HomeScreen> {
     connectedUserId = prefs.getInt('connectedUserId');
   }
 
-
   Future<void> initData() async {
     await getConnectedUserId();
     print("The connected user id is this one$connectedUserId");
     await getData();
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    if ((listVehicules.length==0) || (connectedUserId==null) ) {
-    initData();
+    if ((listVehicules.length == 0) || (connectedUserId == null)) {
+      initData();
     }
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
+    print ("longeur =$long");
+    print("largeur =$larg");
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -68,8 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(
-                Icons.home,
-              ),
+              Icons.home,
+            ),
             label: "Acceuil",
           ),
           BottomNavigationBarItem(
@@ -121,8 +124,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 24, 0),
-                      child: Icon(Icons.menu_rounded)),
+                    padding: EdgeInsets.fromLTRB(0, 0, 24, 0),
+                    child: TextButton(
+                      onPressed: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.remove('isConnected');
+                        prefs.remove('connectedUserId');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginScreen()),
+                        );
+                      },
+                      child: Icon(Icons.logout),
+                    ),
+                  ),
                 ],
               ),
               Padding(
@@ -164,22 +180,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 24, 0),
                     child: FlatButton(
-                                          child: Text(
+                      child: Text(
                         'Afficher tout',
                         style: TextStyle(
                             fontSize: 16,
                             fontFamily: 'Nunito',
                             color: Color(0xff868FAC)),
                       ),
-
-                      onPressed: (){
-                         Navigator.of(context).pushNamed("/listcar");
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("/listcar");
                       },
                     ),
                   ),
                 ],
               ),
               SizedBox(
+                //
                 height: 255,
                 child: ListView.builder(
                   itemCount: listVehicules.length,
@@ -192,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Stack(
                             children: [
                               Container(
-                                width: 0.56 * larg,
+                                width: 219,
                                 height: 255,
                                 decoration: BoxDecoration(
                                   color: Color(0xffFFCB00),
@@ -237,10 +253,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Positioned(
                                 top: 215,
-                                    // top 0.3*long = longeur du container - height du container de localisation
-                                left: 0.28 * larg,
+                                // top 0.3*long = longeur du container - height du container de localisation
+                                left: 109,
                                 child: Container(
-                                  width: 0.28 * larg,
+                                  width: 109,
                                   height: 40,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
@@ -286,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(
-                height:20,
+                height: 20,
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(24, 8, 0, 0),
@@ -297,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 16)),
               ),
               SizedBox(
-                height:10,
+                height: 10,
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(24, 8, 24, 0),
@@ -305,37 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                        //height: 0.18 * long,
-                        //width: 0.38 * larg,
-                        decoration: BoxDecoration(
-                          color: Color(0xff868FAC),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              FlatButton(
-                                                              child: Icon(
-                                  Icons.build,
-                                  size: 40,
-                                ),
-                                onPressed: (){
-                                   Navigator.of(context).pushNamed("/carHS");
-                                },
-                              ),
-                              Text(
-                                'Véhicule en panne',
-                                style:
-                                    TextStyle(fontSize: 14, fontFamily: 'Nunito'),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    Container(
-                                      //height: 0.18 * long,
+                      //height: 0.18 * long,
                       //width: 0.38 * larg,
                       decoration: BoxDecoration(
                         color: Color(0xff868FAC),
@@ -347,12 +333,42 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             FlatButton(
-                                                          child: Icon(
+                              child: Icon(
+                                Icons.build,
+                                size: 40,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pushNamed("/carHS");
+                              },
+                            ),
+                            Text(
+                              'Véhicule en panne',
+                              style:
+                                  TextStyle(fontSize: 14, fontFamily: 'Nunito'),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      //height: 0.18 * long,
+                      //width: 0.38 * larg,
+                      decoration: BoxDecoration(
+                        color: Color(0xff868FAC),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            FlatButton(
+                              child: Icon(
                                 Icons.time_to_leave_rounded,
                                 size: 40,
                               ),
-                              onPressed: (){
-                                 Navigator.of(context).pushNamed("/carS");
+                              onPressed: () {
+                                Navigator.of(context).pushNamed("/carS");
                               },
                             ),
                             Text(
@@ -368,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(
-                height:20,
+                height: 20,
               ),
             ],
           ),

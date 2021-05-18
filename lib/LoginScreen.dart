@@ -167,8 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           prefs.setBool('isConnected', true);
                           prefs.setInt("connectedUserId", connectedUser["id"]);
-                          print("i made the sharredPreferences");
-                          print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+       
                           print(prefs.containsKey('isConnected'));
                           Navigator.push(
                             context,
