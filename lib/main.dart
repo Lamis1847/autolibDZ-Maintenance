@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> {
           "/carS": (BuildContext context) => VehiculeEnService(),
           "/carHS": (BuildContext context) => VehiculeHorsService(),
           "/panne": (BuildContext context) => Panne(),
+          "/DetailsPanne": (BuildContext context) => Panne(),
         });
   }
 }
