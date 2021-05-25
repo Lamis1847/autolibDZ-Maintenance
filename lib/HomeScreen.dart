@@ -346,7 +346,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 size: 40,
                               ),
                               onPressed: () {
-                                Navigator.of(context).pushNamed("/panne");
+                                Navigator.of(context).pushNamed("/DetailsPanne");
                               },
                             ),
                             Text(

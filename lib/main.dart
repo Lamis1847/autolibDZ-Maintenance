@@ -1,4 +1,5 @@
 import 'package:autolibdz/Controllers/UserCacheController.dart';
+import 'package:autolibdz/DetailsPanne.dart';
 import 'package:autolibdz/HomeScreen.dart';
 import 'package:autolibdz/panne.dart';
 import 'package:autolibdz/vehiculeEnService.dart';
@@ -55,7 +56,7 @@ class _MyAppState extends State<MyApp> {
           "/carS": (BuildContext context) => VehiculeEnService(),
           "/carHS": (BuildContext context) => VehiculeHorsService(),
           "/panne": (BuildContext context) => Panne(),
-          "/DetailsPanne": (BuildContext context) => Panne(),
+          "/DetailsPanne": (BuildContext context) => DetailsPanne(),
         });
   }
 }
