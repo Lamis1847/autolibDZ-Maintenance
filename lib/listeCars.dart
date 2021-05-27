@@ -1,3 +1,4 @@
+import 'package:autolibdz/Component/BottomNavigationBar.dart';
 import 'package:autolibdz/Model/Vehicule.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,7 @@ class _ListeCarsState extends State<ListeCars> {
     double larg = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
+        bottomNavigationBar: BottomNavigationBarComponent(1),
         body: SingleChildScrollView(
             child: Padding(
           padding: const EdgeInsets.all(10.0),

@@ -7,6 +7,7 @@ import 'package:autolibdz/vehiculeHorsService.dart';
 import 'package:flutter/material.dart';
 import 'package:autolibdz/LoginScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'DetailsPanne.dart';
 import 'Globals/Globals.dart';
 import 'listeCars.dart';
 
@@ -19,13 +20,11 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool isThereConnectedUser = false;
-  
- 
+
   void initData() async {
-    
     UserCacheController userCacheController = new UserCacheController();
     var connectedUser = await userCacheController.getConnectedUser();
-    if (connectedUser !=null) {
+    if (connectedUser != null) {
       isThereConnectedUser = true;
       GlobalVarsSingleton().connectedUserId = connectedUser;
       setState(() {});
@@ -36,12 +35,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    if (isThereConnectedUser==false) {
+    if (isThereConnectedUser == false) {
       initData();
     }
-    print ("_________////////////_____________////////////________") ;
-    print(GlobalVarsSingleton().connectedUserId) ;
-    print ("_________////////////_____________////////////________") ;
+    print("_________////////////_____________////////////________");
+    print(GlobalVarsSingleton().connectedUserId);
+    print("_________////////////_____________////////////________");
 
     return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -49,7 +48,9 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: GlobalVarsSingleton().connectedUserId!=null ? HomeScreen() : LoginScreen(),
+        home: GlobalVarsSingleton().connectedUserId != null
+            ? HomeScreen()
+            : LoginScreen(),
         routes: <String, WidgetBuilder>{
           "/listcar": (BuildContext context) => ListeCars(),
           "/homeS": (BuildContext context) => HomeScreen(),

@@ -1,3 +1,4 @@
+import 'package:autolibdz/Component/BottomNavigationBar.dart';
 import 'package:autolibdz/Controllers/VehiculesController.dart';
 import 'package:autolibdz/Globals/Globals.dart';
 import 'package:autolibdz/Model/Vehicule.dart';
@@ -37,47 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double larg = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Color(0xff252834),
-        currentIndex: _bottomNavigationIndex,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        showUnselectedLabels: true,
-        iconSize: 25,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-            ),
-            label: "Acceuil",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.time_to_leave_rounded,
-            ),
-            label: "Véhicules",
-          ),
-          BottomNavigationBarItem(
-            label: "Pannes",
-            icon: Icon(
-              Icons.build,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "Plan",
-            icon: Icon(
-              Icons.calendar_today_outlined,
-            ),
-          )
-        ],
-        onTap: (index) {
-          print(index);
-          setState(() {
-            _bottomNavigationIndex = index;
-          });
-        },
-      ),
+      bottomNavigationBar: BottomNavigationBarComponent(0),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: SafeArea(
