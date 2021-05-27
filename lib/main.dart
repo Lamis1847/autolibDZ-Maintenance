@@ -1,15 +1,14 @@
-import 'package:autolibdz/Controllers/UserCacheController.dart';
-import 'package:autolibdz/DetailsPanne.dart';
-import 'package:autolibdz/HomeScreen.dart';
-import 'package:autolibdz/panne.dart';
-import 'package:autolibdz/vehiculeEnService.dart';
-import 'package:autolibdz/vehiculeHorsService.dart';
+
+import 'package:autolibdz/views/panne.dart';
+import 'package:autolibdz/views/vehiculeEnService.dart';
+import 'package:autolibdz/views/vehiculeHorsService.dart';
 import 'package:flutter/material.dart';
-import 'package:autolibdz/LoginScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'DetailsPanne.dart';
+import 'Controllers/UserCacheController.dart';
 import 'Globals/Globals.dart';
-import 'listeCars.dart';
+import 'views/DetailsPanne.dart';
+import 'views/HomeScreen.dart';
+import 'views/LoginScreen.dart';
+import 'views/listeCars.dart';
 
 void main() => runApp(MyApp());
 
@@ -38,10 +37,8 @@ class _MyAppState extends State<MyApp> {
     if (isThereConnectedUser == false) {
       initData();
     }
-    print("_________////////////_____________////////////________");
     print(GlobalVarsSingleton().connectedUserId);
-    print("_________////////////_____________////////////________");
-
+   
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'AutolibDz',

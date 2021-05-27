@@ -2,9 +2,10 @@ import 'package:autolibdz/Component/BottomNavigationBar.dart';
 import 'package:autolibdz/Controllers/VehiculesController.dart';
 import 'package:autolibdz/Globals/Globals.dart';
 import 'package:autolibdz/Model/Vehicule.dart';
-import 'package:autolibdz/LoginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'LoginScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -307,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 size: 40,
                               ),
                               onPressed: () {
-                                Navigator.of(context).pushNamed("/DetailsPanne");
+                                Navigator.of(context).pushNamed("/carS");
                               },
                             ),
                             Text(

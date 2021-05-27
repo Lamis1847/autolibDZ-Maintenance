@@ -1,6 +1,7 @@
-import 'package:autolibdz/HomeScreen.dart';
-import 'package:autolibdz/listeCars.dart';
 
+
+import 'package:autolibdz/views/HomeScreen.dart';
+import 'package:autolibdz/views/listeCars.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavigationBarComponent extends StatefulWidget {
@@ -68,7 +69,6 @@ class _BottomNavigationBarComponentState
               );
             }
             break;
-            
         }
       },
     );
