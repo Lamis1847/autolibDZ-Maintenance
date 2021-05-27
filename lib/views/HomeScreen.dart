@@ -1,7 +1,7 @@
 import 'package:autolibdz/Component/BottomNavigationBar.dart';
 import 'package:autolibdz/Controllers/VehiculesController.dart';
 import 'package:autolibdz/Globals/Globals.dart';
-import 'package:autolibdz/Model/Vehicule.dart';
+import 'package:autolibdz/Model/VehiculeModel.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

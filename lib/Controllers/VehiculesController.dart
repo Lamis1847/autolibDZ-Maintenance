@@ -1,5 +1,5 @@
 import 'package:autolibdz/Globals/Globals.dart';
-import 'package:autolibdz/Model/Vehicule.dart';
+import 'package:autolibdz/Model/VehiculeModel.dart';
 import 'package:http/http.dart';
 import 'dart:convert' as convert;
 
@@ -19,6 +19,7 @@ class VehiculesController {
             jsonResponse[i]["marque"],
             'img/car.png',
             jsonResponse[i]["numImmatriculation"],
+            jsonResponse[i]["numChassis"],
             jsonResponse[i]["etat"]);
         listVehicules.add(v);
       }

@@ -1,4 +1,4 @@
-import 'package:autolibdz/Model/Vehicule.dart';
+import 'package:autolibdz/Model/VehiculeModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:anim_search_bar/anim_search_bar.dart';

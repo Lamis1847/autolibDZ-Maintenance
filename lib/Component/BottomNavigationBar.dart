@@ -1,6 +1,5 @@
-
-
 import 'package:autolibdz/views/HomeScreen.dart';
+import 'package:autolibdz/views/PlanMaintenance.dart';
 import 'package:autolibdz/views/listeCars.dart';
 import 'package:flutter/material.dart';
 
@@ -66,6 +65,14 @@ class _BottomNavigationBarComponentState
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ListeCars()),
+              );
+            }
+            break;
+          case 3:
+            {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PlanMaintenance()),
               );
             }
             break;
