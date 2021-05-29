@@ -40,6 +40,9 @@ class _DetailsPlanMaintenanceState extends State<DetailsPlanMaintenance> {
     }
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
+    TextEditingController actionPlanMaintenanceField = TextEditingController();
+
+    print(larg);
     return Scaffold(
       bottomNavigationBar: BottomNavigationBarComponent(3),
       backgroundColor: Colors.white,
@@ -74,7 +77,7 @@ class _DetailsPlanMaintenanceState extends State<DetailsPlanMaintenance> {
                       color: Colors.black,
                     ),
                     onPressed: () {
-                      Navigator.of(context).pushNamed("/homeS");
+                      Navigator.of(context).pushNamed("/PlanMaintenance");
                     },
                   ),
                   Container(
@@ -138,7 +141,85 @@ class _DetailsPlanMaintenanceState extends State<DetailsPlanMaintenance> {
                                   color: Colors.black,
                                 ),
                                 onPressed: () {
-                                  print("la voiture selection");
+                                  showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate:
+                                        DateTime.now().add(Duration(days: 356)),
+                                    builder: (context, child) {
+                                      return SingleChildScrollView(
+                                        child: Column(
+                                          children: <Widget>[
+                                            SizedBox(height: 60),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(4)),
+                                              width: 0.84 * larg,
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                12, 12, 12, 12),
+                                                        child: Text(
+                                                          "Action : ",
+                                                          style: TextStyle(
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .none,
+                                                              fontFamily:
+                                                                  'Nunito',
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Material(
+                                                    child: Container(
+                                                      child: TextField(
+                                                        controller:
+                                                            actionPlanMaintenanceField,
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xFF100b20),
+                                                        ),
+                                                        decoration:
+                                                            InputDecoration(
+                                                                filled: true,
+                                                                fillColor: Color(
+                                                                    0xffF5F7FA),
+                                                                hintText:
+                                                                    "Lavage"),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 1.0),
+                                              child: child,
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ).then((value) async => {
+                                        await PlanMaintenanceController()
+                                            .addActionToPlanMaintenance(
+                                          actionPlanMaintenanceField.text,
+                                          value,
+                                          widget.numChassis,
+                                        )
+                                      });
                                 },
                                 label: Text(
                                   "\nAjouter\n",
