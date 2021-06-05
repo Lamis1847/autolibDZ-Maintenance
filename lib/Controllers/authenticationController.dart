@@ -15,11 +15,9 @@ class Authentication {
       String token = jsonResponse["token"];
       Map<String, dynamic> connectedUser = Jwt.parseJwt(token);
       final prefs = await SharedPreferences.getInstance();
-
       prefs.setBool('isConnected', true);
       prefs.setInt("connectedUserId", connectedUser["id"]);
       GlobalVarsSingleton().connectedUserId = connectedUser["id"];
-      
       return true;
     } else {
       print(response.body);

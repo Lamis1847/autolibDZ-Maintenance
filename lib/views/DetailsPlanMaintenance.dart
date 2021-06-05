@@ -35,6 +35,7 @@ class _DetailsPlanMaintenanceState extends State<DetailsPlanMaintenance> {
 
   @override
   Widget build(BuildContext context) {
+    print("//////////////////////////////////${listplanMaintenance.length}");
     if (listplanMaintenance.length == 0) {
       initData();
     }
@@ -212,13 +213,14 @@ class _DetailsPlanMaintenanceState extends State<DetailsPlanMaintenance> {
                                         ),
                                       );
                                     },
+                                    // ignore: sdk_version_set_literal
                                   ).then((value) async => {
                                         await PlanMaintenanceController()
                                             .addActionToPlanMaintenance(
                                           actionPlanMaintenanceField.text,
                                           value,
                                           widget.numChassis,
-                                        )
+                                        ),
                                       });
                                 },
                                 label: Text(
@@ -269,28 +271,71 @@ class _DetailsPlanMaintenanceState extends State<DetailsPlanMaintenance> {
                   itemCount: listplanMaintenance.length,
                   scrollDirection: Axis.vertical,
                   itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      color: const Color(0xffF4F7FC),
-                      child: Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(listplanMaintenance[index].date,
-                                style: TextStyle(
-                                  fontFamily: 'Nunito',
-                                  fontSize: long * 0.020,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black,
-                                )),
-                            Text(listplanMaintenance[index].action,
-                                style: TextStyle(
-                                  fontFamily: 'Nunito',
-                                  fontSize: long * 0.020,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black,
-                                )),
-                          ],
+                    final item = listplanMaintenance[index];
+                    return Dismissible(
+                      onDismissed: (direction) async {
+                        var success = await PlanMaintenanceController()
+                            .deleteActionPlanMaintenance(
+                                listplanMaintenance[index].action,
+                                listplanMaintenance[index].numChassis,
+                                index);
+                        setState(() {
+                          if (success == true) {
+                            listplanMaintenance.removeAt(index);
+                            print("deleted successfuly");
+                          }
+                        });
+                      },
+                      confirmDismiss: (DismissDirection direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Confirmation"),
+                              content: const Text(
+                                  "Êtes-vous sûr de bien vouloir supprimer cet élément?"),
+                              actions: <Widget>[
+                                TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: const Text("Supprimer")),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: const Text("Annuler"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      key: UniqueKey(),
+                      child: Card(
+                        color: const Color(0xffF4F7FC),
+                        child: Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 0.15 * larg),
+                              Text(listplanMaintenance[index].date,
+                                  style: TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontSize: long * 0.020,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                              SizedBox(width: 0.15 * larg),
+                              Text(listplanMaintenance[index].action,
+                                  overflow: TextOverflow.fade,
+                                  style: TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontSize: long * 0.020,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                              Spacer(),
+                            ],
+                          ),
                         ),
                       ),
                     );

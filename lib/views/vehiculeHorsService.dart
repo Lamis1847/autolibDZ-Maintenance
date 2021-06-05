@@ -59,8 +59,9 @@ class _VehiculeHorsServiceState extends State<VehiculeHorsService> {
                       Navigator.of(context).pushNamed("/homeS");
                     },
                   ),
-                  Container(
+                  Expanded(
                     child: Text("Véhicules hors service",
+                    overflow: TextOverflow.clip,
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: long * 0.035,
@@ -68,7 +69,6 @@ class _VehiculeHorsServiceState extends State<VehiculeHorsService> {
                           color: Colors.black,
                         )),
                   ),
-                  Expanded(flex: 4, child: Container()),
                 ],
               ),
               AnimSearchBar(
