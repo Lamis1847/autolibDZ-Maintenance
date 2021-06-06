@@ -5,7 +5,7 @@ class GlobalVarsSingleton{
 
   int connectedUserId ;
   List<Vehicule> listVehicule ;
-  Map<int,List<PlanMaintenanceModel>> tousPlansMaintenance ;
+  Map<int,List<PlanMaintenanceModel>> tousPlansMaintenance ; //numchassis -> list des plan
   
 
   static final GlobalVarsSingleton _GlobalVarssingleton = GlobalVarsSingleton._internal();

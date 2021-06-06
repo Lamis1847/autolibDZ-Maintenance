@@ -2,6 +2,7 @@ import 'package:autolibdz/Component/BottomNavigationBar.dart';
 import 'package:autolibdz/Controllers/VehiculesController.dart';
 import 'package:autolibdz/Globals/Globals.dart';
 import 'package:autolibdz/Model/VehiculeModel.dart';
+import 'package:autolibdz/views/car.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,24 +18,23 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Vehicule> listVehicules = <Vehicule>[];
 
   Future<void> initData() async {
-    if (GlobalVarsSingleton().listVehicule==null) {
-    VehiculesController vehiculesController = new VehiculesController();
-    await vehiculesController.getListVehicules();
-    listVehicules = GlobalVarsSingleton().listVehicule ;
-    setState(() {});
-    }
-    else {
-      listVehicules = GlobalVarsSingleton().listVehicule ;
+    if (GlobalVarsSingleton().listVehicule == null) {
+      VehiculesController vehiculesController = new VehiculesController();
+      await vehiculesController.getListVehicules();
+      listVehicules = GlobalVarsSingleton().listVehicule;
+      setState(() {});
+    } else {
+      listVehicules = GlobalVarsSingleton().listVehicule;
     }
   }
 
   @override
-  Widget build(BuildContext context) { // ana agent must have at least one vehicule or its gonna cause a problem
+  Widget build(BuildContext context) {
+    // ana agent must have at least one vehicule or its gonna cause a problem
     if (listVehicules.length == 0) {
       initData();
     }
-   
-    
+
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
 
@@ -180,14 +180,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               Positioned(
-                                bottom: 8,
+                                bottom: -10,
                                 left: 8,
-                                child: Text(
-                                  'Détails',
-                                  style: TextStyle(
-                                    fontFamily: 'Nunito',
-                                    fontSize: 16,
-                                    color: Color(0xff252834),
+                                child: TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Car(listVehicules[index],index)),
+                                    );
+                                  },
+                                  child: Text(
+                                    'Détails',
+                                    style: TextStyle(
+                                      fontFamily: 'Nunito',
+                                      fontSize: 16,
+                                      color: Color(0xff252834),
+                                    ),
                                   ),
                                 ),
                               ),

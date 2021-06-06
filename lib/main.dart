@@ -1,5 +1,5 @@
-
 import 'package:autolibdz/views/PlanMaintenance.dart';
+import 'package:autolibdz/views/car.dart';
 import 'package:autolibdz/views/panne.dart';
 import 'package:autolibdz/views/vehiculeEnService.dart';
 import 'package:autolibdz/views/vehiculeHorsService.dart';
@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
       initData();
     }
     print(GlobalVarsSingleton().connectedUserId);
-   
+
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'AutolibDz',
@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
           "/carHS": (BuildContext context) => VehiculeHorsService(),
           "/panne": (BuildContext context) => Panne(),
           "/DetailsPanne": (BuildContext context) => DetailsPanne(),
-          "/PlanMaintenance" : (BuildContext context)=>PlanMaintenance(),
+          "/PlanMaintenance": (BuildContext context) => PlanMaintenance(),
         });
   }
 }

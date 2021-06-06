@@ -1,6 +1,7 @@
 import 'package:autolibdz/views/HomeScreen.dart';
 import 'package:autolibdz/views/PlanMaintenance.dart';
 import 'package:autolibdz/views/listeCars.dart';
+import 'package:autolibdz/views/panne.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavigationBarComponent extends StatefulWidget {
@@ -65,6 +66,14 @@ class _BottomNavigationBarComponentState
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ListeCars()),
+              );
+            }
+            break;
+          case 2:
+            {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Panne()),
               );
             }
             break;

@@ -1,3 +1,4 @@
+import 'package:autolibdz/Component/BottomNavigationBar.dart';
 import 'package:flutter/material.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 
@@ -7,7 +8,6 @@ class Panne extends StatefulWidget {
 }
 
 class _PanneState extends State<Panne> {
-  int _bottomNavigationIndex = 0;
   TextEditingController textController = TextEditingController();
 
   @override
@@ -15,47 +15,7 @@ class _PanneState extends State<Panne> {
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Color(0xff252834),
-        currentIndex: _bottomNavigationIndex,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        showUnselectedLabels: true,
-        iconSize: 25,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-            ),
-            label: "Acceuil",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.time_to_leave_rounded,
-            ),
-            label: "Véhicules",
-          ),
-          BottomNavigationBarItem(
-            label: "Pannes",
-            icon: Icon(
-              Icons.build,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "Plan",
-            icon: Icon(
-              Icons.calendar_today_outlined,
-            ),
-          )
-        ],
-        onTap: (index) {
-          print(index);
-          setState(() {
-            _bottomNavigationIndex = index;
-          });
-        },
-      ),
+      bottomNavigationBar: BottomNavigationBarComponent(2),
       body: SingleChildScrollView(
         child: SafeArea(
             child: Padding(
