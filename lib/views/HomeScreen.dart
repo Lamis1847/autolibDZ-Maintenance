@@ -14,8 +14,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _bottomNavigationIndex = 0;
   List<Vehicule> listVehicules = <Vehicule>[];
+  List<Vehicule> searchedListVehicules = <Vehicule>[];
 
   Future<void> initData() async {
     if (GlobalVarsSingleton().listVehicule == null) {
@@ -26,10 +26,16 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       listVehicules = GlobalVarsSingleton().listVehicule;
     }
+
+    for (int i = 0; i < listVehicules.length; i++) {
+      searchedListVehicules.add(listVehicules[i]);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController searchController = TextEditingController();
+
     // ana agent must have at least one vehicule or its gonna cause a problem
     if (listVehicules.length == 0) {
       initData();
@@ -84,6 +90,19 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: EdgeInsets.fromLTRB(24, 0, 24, 0),
                 child: TextField(
+                  onChanged: (stringValue) {
+                    print(stringValue);
+                    searchedListVehicules.clear();
+                    listVehicules.forEach((element) {
+                      if (element.marque
+                          .toLowerCase()
+                          .contains(stringValue.toLowerCase())) {
+                        print(element.matricule);
+                        searchedListVehicules.add(element);
+                      }
+                    });
+                  },
+                  controller: searchController,
                   style: TextStyle(
                     color: Color(0xFF100b20),
                   ),
@@ -112,9 +131,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Padding(
                     padding: EdgeInsets.fromLTRB(24, 0, 0, 0),
-                    child: Text(
-                      'Véhicules',
-                      style: TextStyle(fontSize: 16, fontFamily: 'Nunito'),
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          searchedListVehicules.clear();
+                          for (int i = 0; i < listVehicules.length; i++) {
+                            searchedListVehicules.add(listVehicules[i]);
+                          }
+                        });
+                      },
+                      child: Text(
+                        'Véhicules',
+                        style: TextStyle(fontSize: 16, fontFamily: 'Nunito'),
+                      ),
                     ),
                   ),
                   Padding(
@@ -138,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 //
                 height: 255,
                 child: ListView.builder(
-                  itemCount: listVehicules.length,
+                  itemCount: searchedListVehicules.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
@@ -161,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      listVehicules[index].modele,
+                                      searchedListVehicules[index].modele,
                                       style: TextStyle(
                                         fontFamily: 'Nunito',
                                         fontSize: 16,
@@ -169,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Text(
-                                      listVehicules[index].marque,
+                                      searchedListVehicules[index].marque,
                                       style: TextStyle(
                                         fontFamily: 'Nunito',
                                         fontSize: 16,
@@ -187,7 +216,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Car(listVehicules[index],index)),
+                                          builder: (context) => Car(
+                                              searchedListVehicules[index],
+                                              index)),
                                     );
                                   },
                                   child: Text(

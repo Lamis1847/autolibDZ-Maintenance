@@ -14,9 +14,8 @@ class ListeCars extends StatefulWidget {
 class _ListeCarsState extends State<ListeCars> {
   List<Vehicule> listVehicules = <Vehicule>[];
 
-
   Future<void> initData() async {
-    listVehicules = GlobalVarsSingleton().listVehicule ;
+    listVehicules = GlobalVarsSingleton().listVehicule;
   }
 
   TextEditingController textController = TextEditingController();
@@ -179,12 +178,16 @@ class _ListeCarsState extends State<ListeCars> {
                                   color: Colors.black,
                                 )),
                             Text(listVehicules[index].etat,
-                              
                                 style: TextStyle(
                                   fontFamily: 'Nunito',
                                   fontSize: long * 0.017,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xff2DCE89),
+                                  color: ((listVehicules[index].etat ==
+                                              "en service") ||
+                                          (listVehicules[index].etat ==
+                                              "circulation"))
+                                      ? Color(0xff2DCE89)
+                                      : Color(0xfff41711),
                                 )),
                           ],
                         ),
@@ -193,7 +196,7 @@ class _ListeCarsState extends State<ListeCars> {
                   },
                 ),
               ),
-            
+
               SizedBox(
                 height: 20,
               ),

@@ -180,7 +180,7 @@ class _VehiculeHorsServiceState extends State<VehiculeHorsService> {
                                   fontFamily: 'Nunito',
                                   fontSize: long * 0.017,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xff2DCE89),
+                                  color: const Color(0xfff41711),
                                 )),
                           ],
                         ),
