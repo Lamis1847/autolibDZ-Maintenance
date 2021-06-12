@@ -1,21 +1,25 @@
-import 'package:autolibdz/Model/Vehicule.dart';
+import 'package:autolibdz/Model/VehiculeModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:anim_search_bar/anim_search_bar.dart';
 
-import 'Globals/Globals.dart';
+import '../Globals/Globals.dart';
 
-class ListeCars extends StatefulWidget {
+
+class VehiculeHorsService extends StatefulWidget {
   @override
-  _ListeCarsState createState() => _ListeCarsState();
+  _VehiculeHorsServiceState createState() => _VehiculeHorsServiceState();
 }
 
-class _ListeCarsState extends State<ListeCars> {
+class _VehiculeHorsServiceState extends State<VehiculeHorsService> {
   List<Vehicule> listVehicules = <Vehicule>[];
 
-
-  Future<void> initData() async {
-    listVehicules = GlobalVarsSingleton().listVehicule ;
+  initData() {
+    for (int i = 0; i < GlobalVarsSingleton().listVehicule.length; i++) {
+      if (GlobalVarsSingleton().listVehicule[i].etat == "hors service") {
+        listVehicules.add(GlobalVarsSingleton().listVehicule[i]);
+      }
+    }
   }
 
   TextEditingController textController = TextEditingController();
@@ -44,7 +48,6 @@ class _ListeCarsState extends State<ListeCars> {
               SizedBox(
                 height: 10,
               ),
-
               Row(
                 children: [
                   FlatButton(
@@ -56,8 +59,9 @@ class _ListeCarsState extends State<ListeCars> {
                       Navigator.of(context).pushNamed("/homeS");
                     },
                   ),
-                  Container(
-                    child: Text("Liste des véhicules",
+                  Expanded(
+                    child: Text("Véhicules hors service",
+                    overflow: TextOverflow.clip,
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: long * 0.035,
@@ -65,10 +69,8 @@ class _ListeCarsState extends State<ListeCars> {
                           color: Colors.black,
                         )),
                   ),
-                  Expanded(flex: 4, child: Container()),
                 ],
               ),
-
               AnimSearchBar(
                 width: 400,
                 textController: textController,
@@ -78,9 +80,7 @@ class _ListeCarsState extends State<ListeCars> {
                   });
                 },
               ),
-
               SizedBox(height: 20),
-
               Card(
                   color: const Color(0xffFFCB00),
                   child: Padding(
@@ -120,7 +120,6 @@ class _ListeCarsState extends State<ListeCars> {
                           ),
                         ]),
                   )),
-              //boucle des véhicules
               SizedBox(
                 //
                 height: 255,
@@ -177,12 +176,11 @@ class _ListeCarsState extends State<ListeCars> {
                                   color: Colors.black,
                                 )),
                             Text(listVehicules[index].etat,
-                              
                                 style: TextStyle(
                                   fontFamily: 'Nunito',
                                   fontSize: long * 0.017,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xff2DCE89),
+                                  color: const Color(0xfff41711),
                                 )),
                           ],
                         ),
@@ -191,11 +189,9 @@ class _ListeCarsState extends State<ListeCars> {
                   },
                 ),
               ),
-            
               SizedBox(
                 height: 20,
               ),
-
               Container(
                 padding: EdgeInsets.symmetric(vertical: 5),
                 width: double.infinity,

@@ -1,22 +1,21 @@
-import 'package:autolibdz/Globals/Globals.dart';
-import 'package:autolibdz/Model/Vehicule.dart';
+import 'package:autolibdz/Component/BottomNavigationBar.dart';
+import 'package:autolibdz/Model/VehiculeModel.dart';
 import 'package:flutter/material.dart';
+
 import 'package:anim_search_bar/anim_search_bar.dart';
 
-class VehiculeEnService extends StatefulWidget {
+import '../Globals/Globals.dart';
+
+class ListeCars extends StatefulWidget {
   @override
-  _VehiculeEnServiceState createState() => _VehiculeEnServiceState();
+  _ListeCarsState createState() => _ListeCarsState();
 }
 
-class _VehiculeEnServiceState extends State<VehiculeEnService> {
+class _ListeCarsState extends State<ListeCars> {
   List<Vehicule> listVehicules = <Vehicule>[];
 
-   initData()  {
-    for (int i=0;i<GlobalVarsSingleton().listVehicule.length;i++) {
-      if (GlobalVarsSingleton().listVehicule[i].etat=="en service") {
-        listVehicules.add(GlobalVarsSingleton().listVehicule[i]) ;
-      }
-    }
+  Future<void> initData() async {
+    listVehicules = GlobalVarsSingleton().listVehicule;
   }
 
   TextEditingController textController = TextEditingController();
@@ -27,6 +26,7 @@ class _VehiculeEnServiceState extends State<VehiculeEnService> {
     double larg = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
+        bottomNavigationBar: BottomNavigationBarComponent(1),
         body: SingleChildScrollView(
             child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -58,7 +58,7 @@ class _VehiculeEnServiceState extends State<VehiculeEnService> {
                     },
                   ),
                   Container(
-                    child: Text("Véhicules en service",
+                    child: Text("Liste des véhicules",
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: long * 0.035,
@@ -182,7 +182,12 @@ class _VehiculeEnServiceState extends State<VehiculeEnService> {
                                   fontFamily: 'Nunito',
                                   fontSize: long * 0.017,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xff2DCE89),
+                                  color: ((listVehicules[index].etat ==
+                                              "en service") ||
+                                          (listVehicules[index].etat ==
+                                              "circulation"))
+                                      ? Color(0xff2DCE89)
+                                      : Color(0xfff41711),
                                 )),
                           ],
                         ),
@@ -191,6 +196,7 @@ class _VehiculeEnServiceState extends State<VehiculeEnService> {
                   },
                 ),
               ),
+
               SizedBox(
                 height: 20,
               ),

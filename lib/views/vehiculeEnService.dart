@@ -1,22 +1,20 @@
-import 'package:autolibdz/Model/Vehicule.dart';
+import 'package:autolibdz/Globals/Globals.dart';
+import 'package:autolibdz/Model/VehiculeModel.dart';
 import 'package:flutter/material.dart';
-
 import 'package:anim_search_bar/anim_search_bar.dart';
 
-import 'Globals/Globals.dart';
-
-class VehiculeHorsService extends StatefulWidget {
+class VehiculeEnService extends StatefulWidget {
   @override
-  _VehiculeHorsServiceState createState() => _VehiculeHorsServiceState();
+  _VehiculeEnServiceState createState() => _VehiculeEnServiceState();
 }
 
-class _VehiculeHorsServiceState extends State<VehiculeHorsService> {
+class _VehiculeEnServiceState extends State<VehiculeEnService> {
   List<Vehicule> listVehicules = <Vehicule>[];
 
-  initData() {
-    for (int i = 0; i < GlobalVarsSingleton().listVehicule.length; i++) {
-      if (GlobalVarsSingleton().listVehicule[i].etat == "hors service") {
-        listVehicules.add(GlobalVarsSingleton().listVehicule[i]);
+   initData()  {
+    for (int i=0;i<GlobalVarsSingleton().listVehicule.length;i++) {
+      if (GlobalVarsSingleton().listVehicule[i].etat=="en service") {
+        listVehicules.add(GlobalVarsSingleton().listVehicule[i]) ;
       }
     }
   }
@@ -47,6 +45,7 @@ class _VehiculeHorsServiceState extends State<VehiculeHorsService> {
               SizedBox(
                 height: 10,
               ),
+
               Row(
                 children: [
                   FlatButton(
@@ -59,7 +58,7 @@ class _VehiculeHorsServiceState extends State<VehiculeHorsService> {
                     },
                   ),
                   Container(
-                    child: Text("Véhicules hors service",
+                    child: Text("Véhicules en service",
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: long * 0.035,
@@ -70,6 +69,7 @@ class _VehiculeHorsServiceState extends State<VehiculeHorsService> {
                   Expanded(flex: 4, child: Container()),
                 ],
               ),
+
               AnimSearchBar(
                 width: 400,
                 textController: textController,
@@ -79,7 +79,9 @@ class _VehiculeHorsServiceState extends State<VehiculeHorsService> {
                   });
                 },
               ),
+
               SizedBox(height: 20),
+
               Card(
                   color: const Color(0xffFFCB00),
                   child: Padding(
@@ -119,6 +121,7 @@ class _VehiculeHorsServiceState extends State<VehiculeHorsService> {
                           ),
                         ]),
                   )),
+              //boucle des véhicules
               SizedBox(
                 //
                 height: 255,
@@ -191,6 +194,7 @@ class _VehiculeHorsServiceState extends State<VehiculeHorsService> {
               SizedBox(
                 height: 20,
               ),
+
               Container(
                 padding: EdgeInsets.symmetric(vertical: 5),
                 width: double.infinity,

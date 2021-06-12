@@ -1,9 +1,12 @@
+import 'package:autolibdz/Component/BottomNavigationBar.dart';
 import 'package:autolibdz/Controllers/VehiculesController.dart';
 import 'package:autolibdz/Globals/Globals.dart';
-import 'package:autolibdz/Model/Vehicule.dart';
-import 'package:autolibdz/LoginScreen.dart';
+import 'package:autolibdz/Model/VehiculeModel.dart';
+import 'package:autolibdz/views/car.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'LoginScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,73 +14,38 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _bottomNavigationIndex = 0;
   List<Vehicule> listVehicules = <Vehicule>[];
+  List<Vehicule> searchedListVehicules = <Vehicule>[];
 
   Future<void> initData() async {
-    if (GlobalVarsSingleton().listVehicule==null) {
-    VehiculesController vehiculesController = new VehiculesController();
-    await vehiculesController.getListVehicules();
-    listVehicules = GlobalVarsSingleton().listVehicule ;
-    setState(() {});
+    if (GlobalVarsSingleton().listVehicule == null) {
+      VehiculesController vehiculesController = new VehiculesController();
+      await vehiculesController.getListVehicules();
+      listVehicules = GlobalVarsSingleton().listVehicule;
+      setState(() {});
+    } else {
+      listVehicules = GlobalVarsSingleton().listVehicule;
     }
-    else {
-      listVehicules = GlobalVarsSingleton().listVehicule ;
+
+    for (int i = 0; i < listVehicules.length; i++) {
+      searchedListVehicules.add(listVehicules[i]);
     }
   }
 
   @override
-  Widget build(BuildContext context) { // ana agent must have at least one vehicule or its gonna cause a problem
+  Widget build(BuildContext context) {
+    TextEditingController searchController = TextEditingController();
+
+    // ana agent must have at least one vehicule or its gonna cause a problem
     if (listVehicules.length == 0) {
       initData();
     }
-   
-    
+
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Color(0xff252834),
-        currentIndex: _bottomNavigationIndex,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        showUnselectedLabels: true,
-        iconSize: 25,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-            ),
-            label: "Acceuil",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.time_to_leave_rounded,
-            ),
-            label: "Véhicules",
-          ),
-          BottomNavigationBarItem(
-            label: "Pannes",
-            icon: Icon(
-              Icons.build,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "Plan",
-            icon: Icon(
-              Icons.calendar_today_outlined,
-            ),
-          )
-        ],
-        onTap: (index) {
-          print(index);
-          setState(() {
-            _bottomNavigationIndex = index;
-          });
-        },
-      ),
+      bottomNavigationBar: BottomNavigationBarComponent(0),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: SafeArea(
@@ -122,6 +90,19 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: EdgeInsets.fromLTRB(24, 0, 24, 0),
                 child: TextField(
+                  onChanged: (stringValue) {
+                    print(stringValue);
+                    searchedListVehicules.clear();
+                    listVehicules.forEach((element) {
+                      if (element.marque
+                          .toLowerCase()
+                          .contains(stringValue.toLowerCase())) {
+                        print(element.matricule);
+                        searchedListVehicules.add(element);
+                      }
+                    });
+                  },
+                  controller: searchController,
                   style: TextStyle(
                     color: Color(0xFF100b20),
                   ),
@@ -150,9 +131,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Padding(
                     padding: EdgeInsets.fromLTRB(24, 0, 0, 0),
-                    child: Text(
-                      'Véhicules',
-                      style: TextStyle(fontSize: 16, fontFamily: 'Nunito'),
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          searchedListVehicules.clear();
+                          for (int i = 0; i < listVehicules.length; i++) {
+                            searchedListVehicules.add(listVehicules[i]);
+                          }
+                        });
+                      },
+                      child: Text(
+                        'Véhicules',
+                        style: TextStyle(fontSize: 16, fontFamily: 'Nunito'),
+                      ),
                     ),
                   ),
                   Padding(
@@ -176,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 //
                 height: 255,
                 child: ListView.builder(
-                  itemCount: listVehicules.length,
+                  itemCount: searchedListVehicules.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
@@ -199,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      listVehicules[index].modele,
+                                      searchedListVehicules[index].modele,
                                       style: TextStyle(
                                         fontFamily: 'Nunito',
                                         fontSize: 16,
@@ -207,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Text(
-                                      listVehicules[index].marque,
+                                      searchedListVehicules[index].marque,
                                       style: TextStyle(
                                         fontFamily: 'Nunito',
                                         fontSize: 16,
@@ -218,14 +209,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               Positioned(
-                                bottom: 8,
+                                bottom: -10,
                                 left: 8,
-                                child: Text(
-                                  'Détails',
-                                  style: TextStyle(
-                                    fontFamily: 'Nunito',
-                                    fontSize: 16,
-                                    color: Color(0xff252834),
+                                child: TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Car(
+                                              searchedListVehicules[index],
+                                              index)),
+                                    );
+                                  },
+                                  child: Text(
+                                    'Détails',
+                                    style: TextStyle(
+                                      fontFamily: 'Nunito',
+                                      fontSize: 16,
+                                      color: Color(0xff252834),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -346,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 size: 40,
                               ),
                               onPressed: () {
-                                Navigator.of(context).pushNamed("/DetailsPanne");
+                                Navigator.of(context).pushNamed("/carS");
                               },
                             ),
                             Text(
