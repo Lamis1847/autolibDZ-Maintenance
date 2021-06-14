@@ -1,3 +1,4 @@
+import 'package:autolibdz/Controllers/VehiculesController.dart';
 import 'package:autolibdz/Globals/Globals.dart';
 import 'package:autolibdz/Model/VehiculeModel.dart';
 import 'package:autolibdz/views/DetailsPlanMaintenance.dart';
@@ -44,7 +45,7 @@ class _CarState extends State<Car> {
                         Expanded(
                           flex: 3,
                           child: Container(
-                            child: Text("Peugeot 308",
+                            child: Text(widget.vehicule.marque + " "+widget.vehicule.modele,
                                 style: TextStyle(
                                   fontFamily: 'Nunito',
                                   fontSize: long * 0.045,
@@ -180,7 +181,7 @@ class _CarState extends State<Car> {
                                       height: 3,
                                     ),
                                     Text(
-                                      widget.vehicule.matricule.toString(),
+                                      widget.vehicule.numChassis.toString(),
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontFamily: 'Nunito',
@@ -244,26 +245,34 @@ class _CarState extends State<Car> {
                       activeTextFontWeight: FontWeight.bold,
                       activeTextColor: Colors.white,
                       inactiveTextColor: Colors.white,
-                      value: widget.vehicule.etat=="en service",
+                      value: widget.vehicule.etat == "en service",
                       valueFontSize: 12.0,
                       width: 130,
                       borderRadius: 30.0,
                       showOnOff: true,
-                      onToggle: (val) {
+                      onToggle: (val) async {
                         if (val == true) {
-                          widget.vehicule.etat = "en service";
-                          GlobalVarsSingleton()
-                              .listVehicule[widget.indexVehicule]
-                              .etat = "en service";
+                          var result = await VehiculesController()
+                              .setVehiculeEtat(
+                                  widget.vehicule.numChassis, "en service");
+                          if (result) {
+                            widget.vehicule.etat = "en service";
+                            GlobalVarsSingleton()
+                                .listVehicule[widget.indexVehicule]
+                                .etat = "en service";
+                          }
                         } else {
-                          widget.vehicule.etat = "hors service";
-                          GlobalVarsSingleton()
-                              .listVehicule[widget.indexVehicule]
-                              .etat = "hors service";
+                          var result = await VehiculesController()
+                              .setVehiculeEtat(
+                                  widget.vehicule.numChassis, "hors service");
+                          if (result) {
+                            widget.vehicule.etat = "hors service";
+                            GlobalVarsSingleton()
+                                .listVehicule[widget.indexVehicule]
+                                .etat = "hors service";
+                          }
                         }
-                        setState(() {
-                        
-                        });
+                        setState(() {});
                       },
                     ),
                     SizedBox(

@@ -2,6 +2,7 @@ import 'package:autolibdz/Globals/Globals.dart';
 import 'package:autolibdz/Model/VehiculeModel.dart';
 import 'package:http/http.dart';
 import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
 
 class VehiculesController {
   getListVehicules() async {
@@ -26,6 +27,26 @@ class VehiculesController {
       GlobalVarsSingleton().listVehicule = listVehicules;
     } else {
       print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  Future<bool> setVehiculeEtat(int numChassis, String etat) async {
+    final url = Uri.parse(
+        'https://autolib-dz.herokuapp.com/api/vehicules/etat/$numChassis');
+    Map data = {
+      "etat": etat,
+    };
+    var body = convert.json.encode(data);
+    var response = await http.put(url,
+        headers: {"Content-Type": "application/json"}, body: body);
+    if (response.statusCode == 200) {
+      print("updated succssfuly");
+
+      return true;
+    } else {
+      print("mafihach update l etat");
+      print(response.statusCode);
+      return false;
     }
   }
 }
