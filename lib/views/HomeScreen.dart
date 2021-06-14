@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       listVehicules = GlobalVarsSingleton().listVehicule;
     }
-
+    print ("list des vehicule length = ${listVehicules.length}");
     for (int i = 0; i < listVehicules.length; i++) {
       searchedListVehicules.add(listVehicules[i]);
     }
