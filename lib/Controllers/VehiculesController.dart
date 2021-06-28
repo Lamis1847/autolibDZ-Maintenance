@@ -18,7 +18,7 @@ class VehiculesController {
         Vehicule v = new Vehicule(
             jsonResponse[i]["modele"],
             jsonResponse[i]["marque"],
-            'img/car.png',
+            jsonResponse[i]["secureUrl"],
             jsonResponse[i]["numImmatriculation"],
             jsonResponse[i]["numChassis"],
             jsonResponse[i]["etat"]);

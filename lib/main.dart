@@ -6,11 +6,9 @@ import 'package:autolibdz/views/vehiculeHorsService.dart';
 import 'package:flutter/material.dart';
 import 'Controllers/UserCacheController.dart';
 import 'Globals/Globals.dart';
-import 'views/DetailsPanne.dart';
 import 'views/HomeScreen.dart';
 import 'views/LoginScreen.dart';
 import 'views/listeCars.dart';
-import 'views/PositionPanne.dart';
 
 void main() => runApp(MyApp());
 
@@ -52,13 +50,11 @@ class _MyAppState extends State<MyApp> {
             : LoginScreen(),
         routes: <String, WidgetBuilder>{
           "/listcar": (BuildContext context) => ListeCars(),
-          "/homeS": (BuildContext context) => HomeScreen(), 
+          "/homeS": (BuildContext context) => HomeScreen(),
           "/carS": (BuildContext context) => VehiculeEnService(),
           "/carHS": (BuildContext context) => VehiculeHorsService(),
           "/panne": (BuildContext context) => Panne(),
-          "/DetailsPanne": (BuildContext context) => DetailsPanne(),
           "/PlanMaintenance": (BuildContext context) => PlanMaintenance(),
-          "/posPanne": (BuildContext context) => PositionPanne(),
         });
   }
 }
