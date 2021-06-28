@@ -22,7 +22,10 @@ class VehiculesController {
             jsonResponse[i]["numImmatriculation"],
             jsonResponse[i]["numChassis"],
             jsonResponse[i]["etat"]);
-        listVehicules.add(v);
+            if ((jsonResponse[i]["etat"])!="supprime"){
+              listVehicules.add(v);
+            }
+        
       }
       GlobalVarsSingleton().listVehicule = listVehicules;
     } else {

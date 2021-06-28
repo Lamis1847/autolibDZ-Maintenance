@@ -10,6 +10,7 @@ import 'views/DetailsPanne.dart';
 import 'views/HomeScreen.dart';
 import 'views/LoginScreen.dart';
 import 'views/listeCars.dart';
+import 'views/PositionPanne.dart';
 
 void main() => runApp(MyApp());
 
@@ -57,6 +58,7 @@ class _MyAppState extends State<MyApp> {
           "/panne": (BuildContext context) => Panne(),
           "/DetailsPanne": (BuildContext context) => DetailsPanne(),
           "/PlanMaintenance": (BuildContext context) => PlanMaintenance(),
+          "/posPanne": (BuildContext context) => PositionPanne(),
         });
   }
 }

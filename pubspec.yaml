@@ -18,6 +18,7 @@ dependencies:
   anim_search_bar: ^2.0.1
   intl: ^0.17.0
   flutter_pusher: ^1.0.2
+  google_maps_flutter: ^2.0.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

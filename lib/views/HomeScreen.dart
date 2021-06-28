@@ -268,10 +268,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               Positioned(
-                                  top: 80,
+                                  top: 100,
                                   left: 20,
                                   child: Image(
-                                    image: const AssetImage('img/car.png'),
+                                    image: const AssetImage('img/carr.png'),
+                                    width: 0.5*larg,
                                   ))
                             ],
                           ),

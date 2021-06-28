@@ -324,7 +324,9 @@ class _CarState extends State<Car> {
                       width: double.infinity,
                       child: RaisedButton(
                         elevation: 5,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed("/posPanne");
+                        },
                         padding: EdgeInsets.all(10),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
@@ -350,6 +352,7 @@ class _CarState extends State<Car> {
                             ),
                           ],
                         ),
+                        
                       ),
                     ),
                   ]),
