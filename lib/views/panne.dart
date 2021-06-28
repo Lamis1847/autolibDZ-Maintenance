@@ -1,4 +1,9 @@
+import 'dart:math';
+
 import 'package:autolibdz/Component/BottomNavigationBar.dart';
+import 'package:autolibdz/Controllers/PanneController.dart';
+import 'package:autolibdz/Model/PanneModel.dart';
+import 'package:autolibdz/views/DetailsPanne.dart';
 import 'package:flutter/material.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 
@@ -8,10 +13,34 @@ class Panne extends StatefulWidget {
 }
 
 class _PanneState extends State<Panne> {
+  List<PanneModel> listPannes = <PanneModel>[];
+  bool gotData = false;
+  bool visibleAlert = false;
+  Future<void> initData() async {
+    PanneController panneController = new PanneController();
+    listPannes = await panneController.getlistPannes();
+    gotData = true;
+    print("longeur from panne widget ${listPannes.length}");
+    setState(() {});
+  }
+
+  void initState() {
+    super.initState();
+    initData();
+  }
+
   TextEditingController textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    if (gotData) {
+      print("i got data");
+      if (listPannes.length == 0) {
+        print("list est vide");
+        visibleAlert = true;
+      }
+      
+    }
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -67,58 +96,85 @@ class _PanneState extends State<Panne> {
                   });
                 },
               ),
+              Visibility(
+                  visible: visibleAlert,
+                  child: Text("Aucune panne n'est signalé")),
               SizedBox(height: 20),
-              Container(
-                //height: long*0.12,
-                width: double.infinity,
-                child: Card(
-                  color: const Color(0xffFFCB00),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Batterie",
-                                style: TextStyle(
-                                  fontFamily: 'Nunito',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Text(
-                                "25 min",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: 'Nunito',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: const Color(0xff667C8A),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 3,
-                          ),
-                          Text(
-                            "Il y a un probleme au niveau de la batterie du véhicule Peogeot 208",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontFamily: 'Nunito',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
+              SizedBox(
+                  height: 0.6 * long,
+                  child: ListView.builder(
+                    itemCount: listPannes.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        //height: long*0.12,
+                        width: double.infinity,
+                        child: InkWell(
+                          child: Card(
+                            color: const Color(0xffFFCB00),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Panne numéro " +
+                                              listPannes[index]
+                                                  .idPanne
+                                                  .toString(),
+                                          style: TextStyle(
+                                            fontFamily: 'Nunito',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        Text(
+                                          new Random().nextInt(50).toString() +
+                                              " min",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontFamily: 'Nunito',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color(0xff667C8A),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ),
+                                    Text(
+                                      listPannes[index].description,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontFamily: 'Nunito',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ]),
                             ),
                           ),
-                        ]),
-                  ),
-                ),
-              ),
+                          onTap: () {
+                            print(index);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailsPanne(listPannes[index])),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  )),
             ],
           ),
         )),
