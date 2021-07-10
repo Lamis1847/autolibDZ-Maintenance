@@ -7,7 +7,7 @@ class NotificationController {
   Future<void> sendDeviceToken() async {
     String token = await FirebaseMessaging.instance.getToken();
     var url =
-        Uri.parse('https://ae2ba8e79b21.ngrok.io/api/pannes/subscribe');
+        Uri.parse('https://autolib-dz.herokuapp.com/api/pannes/subscribe');
     Map data = {
       "token": token,
       "idAgentMaintenance": GlobalVarsSingleton().connectedUserId 

@@ -110,27 +110,6 @@ class _DetailsPlanMaintenanceState extends State<DetailsPlanMaintenance> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Expanded(
-                            flex: 3,
-                            child: TextField(
-                              style: TextStyle(
-                                color: Color(0xFF100b20),
-                              ),
-                              decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Colors.grey,
-                                  ),
-                                  filled: true,
-                                  fillColor: Color(0xffF5F7FA),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 0, style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  hintText: "Recherche"),
-                            ),
-                          ),
                           SizedBox(
                             width: 5,
                           ),

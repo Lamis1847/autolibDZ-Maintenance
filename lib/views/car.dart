@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:autolibdz/Controllers/VehiculesController.dart';
 import 'package:autolibdz/Globals/Globals.dart';
 import 'package:autolibdz/Model/VehiculeModel.dart';
@@ -139,7 +141,7 @@ class _CarState extends State<Car> {
                                         height: 3,
                                       ),
                                       Text(
-                                        "45 254 km",
+                                        new Random().nextInt(65000).toString()+"km",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           fontFamily: 'Nunito',

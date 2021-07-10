@@ -34,10 +34,22 @@ class _HomeScreenState extends State<HomeScreen> {
     print("Launching initState");
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
-      print('Message data: ${message.notification.title}');
-
       if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(message.notification.title),
+              subtitle: Text(message.notification.body),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
       }
     });
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -100,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () async {
                         Authentication authentication = new Authentication();
                         await authentication.logout();
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => LoginScreen()),

@@ -1,9 +1,11 @@
+import 'package:autolibdz/Component/ProgressDialogComponent.dart';
 import 'package:autolibdz/Controllers/authenticationController.dart';
 import 'package:autolibdz/Globals/Globals.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:jwt_decode/jwt_decode.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'HomeScreen.dart';
@@ -14,10 +16,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool visibleAlert = false;
   @override
   Widget build(BuildContext context) {
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
+
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
 
@@ -125,6 +129,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         )),
                   ),
                 ),
+                 Padding(
+                   padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                   child: Visibility(
+                      visible: visibleAlert,
+                      child: Text(
+                        "Email ou mot de passe incorrect",
+                        style: TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.bold),
+                      )),
+                 ),
                 Container(
                   alignment: Alignment.centerRight,
                   child: FlatButton(
@@ -156,17 +170,24 @@ class _LoginScreenState extends State<LoginScreen> {
                         String email = emailController.text;
                         String password = passwordController.text;
                         Authentication authentication = new Authentication();
+                        ProgressDialogComponent pdc =
+                            new ProgressDialogComponent();
+                        pdc.createProgressDialogComponent(context);
+                        pdc.pr.show();
                         var res = await authentication.login(email, password);
+                        pdc.pr.hide();
                         if (res) {
                           print(
                               "after login i set connectedUserID to ${GlobalVarsSingleton().connectedUserId}");
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => HomeScreen()),
                           );
                         } else {
-                          print("invalid account");
+                          setState(() {
+                            visibleAlert = true;
+                          });
                         }
                       }
                     },
