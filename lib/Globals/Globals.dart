@@ -13,6 +13,8 @@ class GlobalVarsSingleton{
   factory GlobalVarsSingleton() {
     return _GlobalVarssingleton;
   }
+  
+  
 
   GlobalVarsSingleton._internal();
 }
