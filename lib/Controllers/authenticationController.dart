@@ -1,3 +1,4 @@
+
 import 'package:autolibdz/Globals/Globals.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -23,5 +24,14 @@ class Authentication {
       print(response.body);
       return false;
     }
+  }
+
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('isConnected');
+    prefs.remove('connectedUserId');
+    GlobalVarsSingleton().connectedUserId = null ; 
+    GlobalVarsSingleton().listVehicule = null ;
+    GlobalVarsSingleton().tousPlansMaintenance = null; 
   }
 }

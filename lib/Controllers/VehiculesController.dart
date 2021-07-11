@@ -8,12 +8,13 @@ class VehiculesController {
   getListVehicules() async {
     int connectedUserId = GlobalVarsSingleton().connectedUserId;
     List<Vehicule> listVehicules = <Vehicule>[];
+    print("the connected user id is $connectedUserId");
     final url = Uri.parse(
         'https://autolib-dz.herokuapp.com/api/vehicules/agents/$connectedUserId');
     Response response = await get(url);
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body) as List<dynamic>;
-      //print("length${jsonResponse.length}");
+      print("length${jsonResponse.length}");
       for (int i = 0; i < jsonResponse.length; i++) {
         Vehicule v = new Vehicule(
             jsonResponse[i]["modele"],
@@ -29,7 +30,7 @@ class VehiculesController {
       }
       GlobalVarsSingleton().listVehicule = listVehicules;
     } else {
-      print('Request failed with status: ${response.statusCode}.');
+      print('Request failed with status there are no vehicules to get: ${response.statusCode}.');
     }
   }
 

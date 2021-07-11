@@ -39,7 +39,6 @@ class _PanneState extends State<Panne> {
         print("list est vide");
         visibleAlert = true;
       }
-      
     }
     double long = MediaQuery.of(context).size.height;
     double larg = MediaQuery.of(context).size.width;
@@ -101,80 +100,80 @@ class _PanneState extends State<Panne> {
                   child: Text("Aucune panne n'est signalé")),
               SizedBox(height: 20),
               SizedBox(
-                  height: 0.6 * long,
-                  child: ListView.builder(
-                    itemCount: listPannes.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        //height: long*0.12,
-                        width: double.infinity,
-                        child: InkWell(
-                          child: Card(
-                            color: const Color(0xffFFCB00),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "Panne numéro " +
-                                              listPannes[index]
-                                                  .idPanne
-                                                  .toString(),
-                                          style: TextStyle(
-                                            fontFamily: 'Nunito',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        Text(
-                                          new Random().nextInt(50).toString() +
-                                              " min",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontFamily: 'Nunito',
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: const Color(0xff667C8A),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 3,
+                height: 0.5 * long,
+                child: ListView.builder(
+                  itemCount: listPannes.length,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      //height: long*0.12,
+                      width: double.infinity,
+                      child: InkWell(
+                        child: Card(
+                          color: const Color(0xffFFCB00),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Panne numéro " +
+                                          listPannes[index].idPanne.toString(),
+                                      style: TextStyle(
+                                        fontFamily: 'Nunito',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                     Text(
-                                      listPannes[index].description,
+                                      new Random().nextInt(50).toString() +
+                                          " min",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontFamily: 'Nunito',
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400,
-                                        color: Colors.black,
+                                        color: const Color(0xff667C8A),
                                       ),
                                     ),
-                                  ]),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  listPannes[index].description,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          onTap: () {
-                            print(index);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      DetailsPanne(listPannes[index])),
-                            );
-                          },
                         ),
-                      );
-                    },
-                  )),
+                        onTap: () {
+                          print(index);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailsPanne(listPannes[index])),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         )),

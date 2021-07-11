@@ -1,5 +1,4 @@
 import 'package:autolibdz/views/PlanMaintenance.dart';
-import 'package:autolibdz/views/car.dart';
 import 'package:autolibdz/views/panne.dart';
 import 'package:autolibdz/views/vehiculeEnService.dart';
 import 'package:autolibdz/views/vehiculeHorsService.dart';
@@ -9,8 +8,13 @@ import 'Globals/Globals.dart';
 import 'views/HomeScreen.dart';
 import 'views/LoginScreen.dart';
 import 'views/listeCars.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -58,226 +62,102 @@ class _MyAppState extends State<MyApp> {
         });
   }
 }
-
+ 
 /*
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_pusher/pusher.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
+void main() {
+  runApp(PositionPanne());
 }
 
-class _MyAppState extends State<MyApp> {
-  Event lastEvent;
-  String lastConnectionState;
-  Channel channel;
+class PositionPanne extends StatefulWidget {
+  @override
+  _PositionPanneState createState() => _PositionPanneState();
+}
 
-  var channelController = TextEditingController(text: "my-channel");
-  var eventController = TextEditingController(text: "my-event");
-  var triggerController = TextEditingController(text: "client-trigger");
-
+class _PositionPanneState extends State<PositionPanne> {
+  Set<Marker> _marker = {};
+  String nomVehicule;
   @override
   void initState() {
+    nomVehicule = "said";
     super.initState();
-    initPusher();
   }
 
-  Future<void> initPusher() async {
-    try {
-      await Pusher.init(
-          "3eece4878496d724be7c", PusherOptions(cluster: "eu", encrypted: true),
-          enableLogging: true);
-    } on PlatformException catch (e) {
-      print(e.message);
-    }
+  double latitude;
+  double longitude;
+
+  void _onMapCreated(GoogleMapController controller) async {
+    setState(() {
+      _marker.add(
+        Marker(
+          markerId: MarkerId('id-1'),
+          position: (LatLng(this.latitude, this.longitude)),
+          infoWindow: InfoWindow(
+              title: nomVehicule, snippet: 'Le véhicule est en panne'),
+        ),
+      );
+    });
+  }
+
+  bool gotData = false;
+  final databaseReference = FirebaseDatabase.instance.reference();
+  Future<void> getInitialLatLng() async {
+    databaseReference.once().then((DataSnapshot snapshot) {
+      print('Data************************************ : ${snapshot.value}');
+      this.latitude = snapshot.value["message"]["1230"]["latitude"];
+      this.longitude = snapshot.value["message"]["1230"]["longitude"];
+      gotData = true;
+      updateMarker();
+    });
+  }
+
+  void readFromDatabase() {
+    databaseReference.child("message").onChildChanged.listen((event) {
+      if (event.snapshot.value["id"] == 1230) {
+        this.longitude = event.snapshot.value["longitude"];
+        this.latitude = event.snapshot.value["latitude"];
+        updateMarker();
+      }
+    });
+  }
+
+  void updateMarker() {
+    print(
+        "i m updating the marker with ${this.longitude}-----${this.latitude}");
+    Marker oldMarker = _marker.first;
+    Marker newMarker = Marker(
+      markerId: oldMarker.markerId,
+      onTap: () {
+        print("tapped");
+      },
+      position: LatLng(this.latitude, this.longitude),
+    );
+    setState(() {
+      _marker.clear();
+      _marker.add(newMarker);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!gotData) getInitialLatLng();
+    readFromDatabase();
     return MaterialApp(
       home: Scaffold(
-          appBar: AppBar(
-            title: Text('Plugin example app'),
+        body: GoogleMap(
+          onMapCreated: _onMapCreated,
+          markers: _marker,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(30.713648, 3.155969),
+            zoom: 15,
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildInfo(),
-                RaisedButton(
-                  child: Text("Connect"),
-                  onPressed: () {
-                    Pusher.connect(onConnectionStateChange: (x) async {
-                      if (mounted)
-                        setState(() {
-                          lastConnectionState = x.currentState;
-                        });
-                    }, onError: (x) {
-                      debugPrint("Error: ${x.message}");
-                    });
-                  },
-                ),
-                RaisedButton(
-                  child: Text("Disconnect"),
-                  onPressed: () {
-                    Pusher.disconnect();
-                  },
-                ),
-                Row(
-                  children: <Widget>[
-                    Container(
-                      width: 200,
-                      child: TextField(
-                        autocorrect: false,
-                        controller: channelController,
-                        decoration: InputDecoration(hintText: "Channel"),
-                      ),
-                    ),
-                    RaisedButton(
-                      child: Text("Subscribe"),
-                      onPressed: () async {
-                        channel =
-                            await Pusher.subscribe(channelController.text);
-                      },
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Container(
-                      width: 200,
-                      child: TextField(
-                        controller: channelController,
-                        decoration: InputDecoration(hintText: "Channel"),
-                      ),
-                    ),
-                    RaisedButton(
-                      child: Text("Unsubscribe"),
-                      onPressed: () async {
-                        await Pusher.unsubscribe(channelController.text);
-                        channel = null;
-                      },
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Container(
-                      width: 200,
-                      child: TextField(
-                        controller: eventController,
-                        decoration: InputDecoration(hintText: "Event"),
-                      ),
-                    ),
-                    RaisedButton(
-                      child: Text("Bind"),
-                      onPressed: () async {
-                        await channel.bind(eventController.text, (x) {
-                          if (mounted)
-                            setState(() {
-                              lastEvent = x;
-                            });
-                        });
-                      },
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Container(
-                      width: 200,
-                      child: TextField(
-                        controller: eventController,
-                        decoration: InputDecoration(hintText: "Event"),
-                      ),
-                    ),
-                    RaisedButton(
-                      child: Text("Unbind"),
-                      onPressed: () async {
-                        await channel.unbind(eventController.text);
-                      },
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Container(
-                      width: 200,
-                      child: TextField(
-                        controller: triggerController,
-                        decoration: InputDecoration(hintText: "Trigger"),
-                      ),
-                    ),
-                    RaisedButton(
-                      child: Text("Trigger"),
-                      onPressed: () async {
-                        await channel.trigger(triggerController.text,
-                            data:
-                                '{"testValue": 123, "anotherOne": false, "nested": {"w0t": "m8"}}');
-                      },
-                    )
-                  ],
-                ),
-              ],
-            ),
-          )),
-    );
-  }
-
-  Widget _buildInfo() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              "Connection State: ",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(lastConnectionState ?? "Unknown"),
-          ],
         ),
-        SizedBox(height: 8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              "Last Event Channel: ",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(lastEvent?.channel ?? ""),
-          ],
-        ),
-        SizedBox(height: 8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              "Last Event Name: ",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(lastEvent?.event ?? ""),
-          ],
-        ),
-        SizedBox(height: 8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              "Last Event Data: ",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(lastEvent?.data ?? ""),
-          ],
-        ),
-      ],
+      ),
     );
   }
 }
+
 */

@@ -1,8 +1,12 @@
 import 'package:autolibdz/Component/BottomNavigationBar.dart';
+import 'package:autolibdz/Controllers/NotificationController.dart';
 import 'package:autolibdz/Controllers/VehiculesController.dart';
+import 'package:autolibdz/Controllers/authenticationController.dart';
 import 'package:autolibdz/Globals/Globals.dart';
 import 'package:autolibdz/Model/VehiculeModel.dart';
+import 'package:autolibdz/views/CarTracker.dart';
 import 'package:autolibdz/views/car.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +21,41 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Vehicule> listVehicules = <Vehicule>[];
   List<Vehicule> searchedListVehicules = <Vehicule>[];
 
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    print("Handling a background message: ${message.messageId}");
+  }
+
+  @override
+  void initState() {
+    NotificationController notificationController =
+        new NotificationController();
+    notificationController.sendDeviceToken();
+    super.initState();
+    print("Launching initState");
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      if (message.notification != null) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(message.notification.title),
+              subtitle: Text(message.notification.body),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      }
+    });
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
   Future<void> initData() async {
     if (GlobalVarsSingleton().listVehicule == null) {
       VehiculesController vehiculesController = new VehiculesController();
@@ -26,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       listVehicules = GlobalVarsSingleton().listVehicule;
     }
-    print ("list des vehicule length = ${listVehicules.length}");
+    print("list des vehicule length = ${listVehicules.length}");
     for (int i = 0; i < listVehicules.length; i++) {
       searchedListVehicules.add(listVehicules[i]);
     }
@@ -72,11 +111,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: EdgeInsets.fromLTRB(0, 0, 24, 0),
                     child: TextButton(
                       onPressed: () async {
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        prefs.remove('isConnected');
-                        prefs.remove('connectedUserId');
-                        Navigator.push(
+                        Authentication authentication = new Authentication();
+                        await authentication.logout();
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => LoginScreen()),
@@ -245,7 +282,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: Color(0xff252834)),
                                   child: InkWell(
                                     onTap: () {
-                                      print(index);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CarTracker(
+                                                searchedListVehicules[index]
+                                                    .numChassis)),
+                                      );
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -271,8 +314,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   top: 100,
                                   left: 20,
                                   child: Image(
-                                    image: NetworkImage(searchedListVehicules[index].photourl),
-                                    width: 0.5*larg,
+                                    image: NetworkImage(
+                                        searchedListVehicules[index].photourl),
+                                    width: 0.5 * larg,
                                   ))
                             ],
                           ),
