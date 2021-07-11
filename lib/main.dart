@@ -36,9 +36,6 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-
-
-  
   @override
   Widget build(BuildContext context) {
     if (isThereConnectedUser == false) {
@@ -65,3 +62,102 @@ class _MyAppState extends State<MyApp> {
         });
   }
 }
+ 
+/*
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+void main() {
+  runApp(PositionPanne());
+}
+
+class PositionPanne extends StatefulWidget {
+  @override
+  _PositionPanneState createState() => _PositionPanneState();
+}
+
+class _PositionPanneState extends State<PositionPanne> {
+  Set<Marker> _marker = {};
+  String nomVehicule;
+  @override
+  void initState() {
+    nomVehicule = "said";
+    super.initState();
+  }
+
+  double latitude;
+  double longitude;
+
+  void _onMapCreated(GoogleMapController controller) async {
+    setState(() {
+      _marker.add(
+        Marker(
+          markerId: MarkerId('id-1'),
+          position: (LatLng(this.latitude, this.longitude)),
+          infoWindow: InfoWindow(
+              title: nomVehicule, snippet: 'Le véhicule est en panne'),
+        ),
+      );
+    });
+  }
+
+  bool gotData = false;
+  final databaseReference = FirebaseDatabase.instance.reference();
+  Future<void> getInitialLatLng() async {
+    databaseReference.once().then((DataSnapshot snapshot) {
+      print('Data************************************ : ${snapshot.value}');
+      this.latitude = snapshot.value["message"]["1230"]["latitude"];
+      this.longitude = snapshot.value["message"]["1230"]["longitude"];
+      gotData = true;
+      updateMarker();
+    });
+  }
+
+  void readFromDatabase() {
+    databaseReference.child("message").onChildChanged.listen((event) {
+      if (event.snapshot.value["id"] == 1230) {
+        this.longitude = event.snapshot.value["longitude"];
+        this.latitude = event.snapshot.value["latitude"];
+        updateMarker();
+      }
+    });
+  }
+
+  void updateMarker() {
+    print(
+        "i m updating the marker with ${this.longitude}-----${this.latitude}");
+    Marker oldMarker = _marker.first;
+    Marker newMarker = Marker(
+      markerId: oldMarker.markerId,
+      onTap: () {
+        print("tapped");
+      },
+      position: LatLng(this.latitude, this.longitude),
+    );
+    setState(() {
+      _marker.clear();
+      _marker.add(newMarker);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!gotData) getInitialLatLng();
+    readFromDatabase();
+    return MaterialApp(
+      home: Scaffold(
+        body: GoogleMap(
+          onMapCreated: _onMapCreated,
+          markers: _marker,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(30.713648, 3.155969),
+            zoom: 15,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+*/

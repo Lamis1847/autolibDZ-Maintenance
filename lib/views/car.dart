@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:autolibdz/Controllers/VehiculesController.dart';
 import 'package:autolibdz/Globals/Globals.dart';
 import 'package:autolibdz/Model/VehiculeModel.dart';
+import 'package:autolibdz/views/CarTracker.dart';
 import 'package:autolibdz/views/DetailsPlanMaintenance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -47,7 +48,10 @@ class _CarState extends State<Car> {
                         Expanded(
                           flex: 3,
                           child: Container(
-                            child: Text(widget.vehicule.marque + " "+widget.vehicule.modele,
+                            child: Text(
+                                widget.vehicule.marque +
+                                    " " +
+                                    widget.vehicule.modele,
                                 style: TextStyle(
                                   fontFamily: 'Nunito',
                                   fontSize: long * 0.045,
@@ -141,7 +145,8 @@ class _CarState extends State<Car> {
                                         height: 3,
                                       ),
                                       Text(
-                                        new Random().nextInt(65000).toString()+"km",
+                                        new Random().nextInt(65000).toString() +
+                                            "km",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           fontFamily: 'Nunito',
@@ -327,7 +332,13 @@ class _CarState extends State<Car> {
                       child: RaisedButton(
                         elevation: 5,
                         onPressed: () {
-                          Navigator.of(context).pushNamed("/posPanne");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CarTracker(
+                                      widget.vehicule.numChassis,
+                                    )),
+                          );
                         },
                         padding: EdgeInsets.all(10),
                         shape: RoundedRectangleBorder(
@@ -354,7 +365,6 @@ class _CarState extends State<Car> {
                             ),
                           ],
                         ),
-                        
                       ),
                     ),
                   ]),

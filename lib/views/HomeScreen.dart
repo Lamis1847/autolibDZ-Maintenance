@@ -4,6 +4,7 @@ import 'package:autolibdz/Controllers/VehiculesController.dart';
 import 'package:autolibdz/Controllers/authenticationController.dart';
 import 'package:autolibdz/Globals/Globals.dart';
 import 'package:autolibdz/Model/VehiculeModel.dart';
+import 'package:autolibdz/views/CarTracker.dart';
 import 'package:autolibdz/views/car.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -281,7 +282,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: Color(0xff252834)),
                                   child: InkWell(
                                     onTap: () {
-                                      print(index);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CarTracker(
+                                                searchedListVehicules[index]
+                                                    .numChassis)),
+                                      );
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
